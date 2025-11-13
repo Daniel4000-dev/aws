@@ -19,6 +19,8 @@ Note: I cleared the **Block all public access** and enabled **ACLs**.
 ## Uploading content to my S3 bucket
 
 - Uploaded the index.html file and the CSS and images folders to my S3 bucket.
+- - In the **cafe-s3-demo-bucket** under **Objects**
+- Select the index.hmtl file and click the **Copy url** button.
 - In a separate web browser tab, opened the endpoint link for the static website.
 
 ![Access denied](public/assets/access_denied.png)
@@ -51,3 +53,9 @@ Note: Aws follows the if not implicit allow, defaults to explicit deny. So allow
 }
 ```
 ![Bucket policy added](public/assets/bucket_policy_added.png)
+
+- In the **cafe-s3-demo-bucket** under **Objects**
+- Select the index.hmtl file and click the **Copy url** button.
+- In a separate web browser tab, opened the endpoint link for the static website., the website should be accessible now
+
+![Website loaded successfully!](public/assets/website_loaded.png)
