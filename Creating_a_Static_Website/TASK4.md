@@ -1,37 +1,57 @@
-# Enhancing durability and planning for DR
+## Technical Lab Report: Enhancing Durability and Planning for Disaster Recovery (DR)
 
-- Here I'll enable cross-Region replication on my source S3 bucket.
+### 1. Objective
 
-## Enabling cross-Region replication
+The objective of this task was to enhance data durability and implement a Disaster Recovery (DR) strategy by enabling **Amazon S3 Cross-Region Replication (CRR)** on the source bucket.
 
-- In a different Region than the Region for my source bucket, created a second bucket and enabled versioning on it. The second bucket is my destination bucket.
+---
 
-![Cross region bucket](./public/assets/cross_region_bucket.png)
+### 2. Procedure: Setting up Cross-Region Replication
 
-- On my source S3 bucket, enabled cross-Region replication. When I created the replication rule, I made sure that I did the following:
-  - Replicate the entire source bucket.
-  - Use **CafeRole** for the AWS Identity and Access Management (IAM) role. This IAM role gives Amazon S3 the permissions to read objects from the source bucket and replicate them to the destination bucket.
-  - If encountered the warning The replication rule is saved, but it might not work, you can ignore it and proceed to the next step.
-  - Chose No, On the prompt about Replicate existing objects.
+#### 2.1 Destination Bucket Preparation
 
-**CafeRole** has the following permissions:
-  ```json
-Version: 2012-10-17
-Statement:
-  - Action:
-  - s3:ListBucket
-  - s3:ReplicateObject
-  - s3:ReplicateDelete
-  - s3:ReplicateTags
-  - s3:Get*
-    Resource:
-  - '*'
-    Effect: Allow
-  ```
-  This access policy allows the role to perform the replication tasks on all S3 buckets. In a real production environment, you should restrict the policy to apply to only your source and destination S3 buckets.
+1.  A second S3 bucket, designated as the **Destination Bucket**, was created in a **different AWS Region** than the source bucket (e.g., US West (Oregon) if the source was US East (N. Virginia)).
+2.  **Versioning was enabled** on the destination bucket, which is a mandatory prerequisite for CRR to function correctly.
 
-  - Made a minor change to the index.html file, and uploaded the new version to my source bucket.
-  - Verified that the source bucket now has three versions of the index.html file.
-  ![Three version bucket](./public/assets/three_bucket.png)
-  - Confirmed that the new object was replicated to my destination bucket. You might need to reload the browser tab.
+    ![Cross region bucket](./public/assets/cross_region_bucket.png)
 
+#### 2.2 Configuring the Replication Rule
+
+On the source S3 bucket, a new replication rule was configured with the following specifications:
+
+* **Scope:** The rule was set to replicate the **entire source bucket**.
+* **Existing Objects:** Replication was configured to **not replicate existing objects** (CRR only applies to objects uploaded after the rule is enabled).
+* **IAM Role:** The custom **CafeRole** was specified. This role provides the necessary permissions for S3 to execute the replication process:
+    * **Purpose of Role:** Allows S3 to read objects from the source bucket and write them to the destination bucket.
+    * **Role Permissions Summary:**
+        ```json
+        Version: 2012-10-17
+        Statement:
+          - Action:
+            - s3:ListBucket
+            - s3:ReplicateObject
+            - s3:ReplicateDelete
+            - s3:ReplicateTags
+            - s3:Get*
+            Resource:
+            - '*'
+            Effect: Allow
+        ```
+    * **Note:** While the policy used was broad (`Resource: '*'`), in a production environment, the resource scope should be restricted to only the source and destination ARNs for security best practice (Principle of Least Privilege).
+
+---
+
+### 3. Verification of Replication
+
+#### 3.1 Uploading a New Object Version
+
+1.  A minor change was made to the local `index.html` file to generate a new object version.
+2.  The new version of the file was uploaded to the **source bucket**.
+
+#### 3.2 Confirming Versioning and Replication
+
+1.  **Source Bucket Verification:** The source S3 bucket confirmed the update by displaying **three versions** of the `index.html` file, validating the Versioning and modification process.
+    ![Three version bucket](./public/assets/three_bucket.png)
+2.  **Destination Bucket Verification:** The destination bucket was checked, and the new object was successfully replicated, confirming the functionality of the CRR rule.
+
+> **Conclusion:** Cross-Region Replication was successfully enabled and verified. The setup provides continuous, asynchronous replication of new data, significantly enhancing the website's durability and providing a robust Disaster Recovery solution in a separate AWS Region.

@@ -57,3 +57,11 @@ The objective of this task was to create and configure an **Amazon S3 bucket** t
 }
 ```
 ![Bucket policy added](public/assets/bucket_policy_added.png)
+
+### 4. Result
+
+After applying the updated Bucket Policy, the static website endpoint was accessed again. The website loaded successfully, confirming that the S3 bucket was correctly configured for public static hosting and proper access permissions were applied.
+
+> **Conclusion:** The successful website load verifies that the bucket policy was correctly implemented to grant public read access (`s3:GetObject`), overcoming the initial access denial and finalizing the static website configuration.
+
+![Website loaded successfully!](./public/assets/website_loaded.png)

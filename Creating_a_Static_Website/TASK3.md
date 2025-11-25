@@ -1,14 +1,43 @@
-# Optimizing costs of Amazon S3 object storage
-- Now that versioning is enabled, the size of the S3 bucket will continue to grow as new objects and versions are uploaded. To save costs, we implement a strategy to retire some of those older versions.
+## Technical Lab Report: Optimizing Costs of Amazon S3 Object Storage
 
-## Setting lifecycle policies
-Here a lifecycle policy to automatically move older versions of the objects in your source bucket to S3 Standard-Infrequent Access (S3 Standard-IA) will be set. The policy should also eventually expire the objects.
+### 1. Objective
 
-- Configured two rules in the website bucket's lifecycle configuration. To receive full credit, create two separate rules. Do not configure two transitions in a single rule:
-  - In one rule, move previous versions of all source bucket objects to S3 Standard-IA after 30 days.
-  - In the other rule, delete previous versions of the objects after 365 days.
+The objective of this task was to implement **Amazon S3 Lifecycle Policies** to manage the growing size and cost of the versioned S3 bucket. The strategy involves automatically transitioning older object versions to a lower-cost storage class and ultimately deleting them after a defined period.
+
+---
+
+### 2. Procedure: Setting Lifecycle Policies
+
+Lifecycle policies were configured on the website bucket to automate the storage management of previous object versions, thereby optimizing storage costs. Two separate, distinct rules were created to meet the requirements.
+
+#### 2.1 Rule 1: Transitioning to S3 Standard-IA
+
+This rule was designed to automatically transition previous object versions to a less expensive storage tier for infrequent access.
+
+* **Action:** Transition noncurrent versions of objects.
+* **Target Storage Class:** **S3 Standard-Infrequent Access (S3 Standard-IA)**.
+* **Timeframe:** After **30 days** from becoming a noncurrent version.
+
+#### 2.2 Rule 2: Expiring Previous Versions
+
+This rule was designed to permanently delete previous object versions that are no longer needed after a year.
+
+* **Action:** Permanently delete noncurrent versions of objects.
+* **Timeframe:** After **365 days** from becoming a noncurrent version.
+
+> **Note:** To ensure precise control over policy application, especially in complex environments, best practice suggests scoping rules using **object tags** rather than applying them globally to all objects.
+
+---
+
+### 3. Result: Verification of Lifecycle Configuration
+
+The S3 bucket's Lifecycle configuration now contains two separate and active rules, ensuring automated cost management:
+
+| Rule Action | Target | Timeframe | Storage Class/Action |
+| :--- | :--- | :--- | :--- |
+| **Transition** | Previous Versions | After 30 days | S3 Standard-IA |
+| **Expiration** | Previous Versions | After 365 days | Permanent Delete |
+
+The implemented configuration successfully addresses cost concerns by transitioning infrequently accessed older versions and eventually retiring them.
 
 ![Lifecycle Policy](./public/assets/life_cycle.png)
-
-Note: To limit the scope of the replication to a particular bucket object (for example, the index.html file), create a tag for the object before you create the lifecycle rule.
-
