@@ -51,7 +51,7 @@ On the source S3 bucket, a new replication rule was configured with the followin
 #### 3.2 Confirming Versioning and Replication
 
 1.  **Source Bucket Verification:** The source S3 bucket confirmed the update by displaying **three versions** of the `index.html` file, validating the Versioning and modification process.
-    ![Three version bucket](./public/assets/three_version.png)
+    ![Three version bucket](./public/assets/three_versions.png)
 2.  **Destination Bucket Verification:** The destination bucket was checked, and the new object was successfully replicated, confirming the functionality of the CRR rule.
 
 > **Conclusion:** Cross-Region Replication was successfully enabled and verified. The setup provides continuous, asynchronous replication of new data, significantly enhancing the website's durability and providing a robust Disaster Recovery solution in a separate AWS Region.
