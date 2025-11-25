@@ -1,10 +1,9 @@
 # Launching a static website
 
-Note: the file uploaded to my S3 bucket can be found in the /static-website directory
+- In this task i will create an S3 bucket and configure it to host my static website.
+- Note: the file uploaded to my S3 bucket can be found in the /static-website directory
 
 ## Creating an S3 bucket to host my static website
-Here i will create an S3 bucket and configure it to host my static website.
-
 - Opened the Amazon S3 console.
 - Followed the **Create bucket** button to Created a bucket in my choice AWS Region. (I used **US East (N. Virginia) us-east-1**)
 
