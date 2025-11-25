@@ -1,37 +1,42 @@
-# Launching a static website
+## Technical Lab Report: Launching a Static Website on Amazon S3
 
-- In this task i will create an S3 bucket and configure it to host my static website.
-- Note: the file uploaded to my S3 bucket can be found in the /static-website directory
+### 1. Objective
 
-## Creating an S3 bucket to host my static website
-- Opened the Amazon S3 console.
-- Followed the **Create bucket** button to Created a bucket in my choice AWS Region. (I used **US East (N. Virginia) us-east-1**)
+The objective of this task was to create and configure an **Amazon S3 bucket** to host a static website, adhering to AWS best practices for deployment and access control. The static website content was sourced from the `/static-website` directory.
 
-Note: I cleared the **Block all public access** and enabled **ACLs**.
+---
 
-![Bucket Created](./public/assets/created_bucket.png)
+### 2. Procedure: S3 Bucket Creation and Configuration
 
-- Edited and enabled static website hosting on my bucket in the properties tab after uploading my document, and chose the index.html file for my index document.
+#### 2.1 Bucket Creation and Initial Setup
 
-![Enabled static hosting](public/assets/enabled_static_hosting.png)
+1.  The Amazon S3 console was accessed to initiate the process.
+2.  A new bucket was created using the **Create bucket** button in the chosen AWS Region: **US East (N. Virginia) (us-east-1)**.
+3.  **Critical Configuration:** During creation, the default **Block all public access** setting was **cleared** and **ACLs** (Access Control Lists) were **enabled** to prepare the bucket for public web access.
+    ![Bucket Created](./public/assets/created_bucket.png)
 
-## Uploading content to my S3 bucket
+#### 2.2 Static Website Hosting Enablement
 
-- Uploaded the index.html file and the CSS and images folders to my S3 bucket.
-- - In the **cafe-s3-demo-bucket** under **Objects**
-- Select the index.hmtl file and click the **Copy url** button.
-- In a separate web browser tab, opened the endpoint link for the static website.
+1.  The website content, including the `index.html` file, CSS folder, and images folder, was uploaded to the S3 bucket (`cafe-s3-demo-bucket`).
+2.  Under the **Properties** tab of the bucket, **Static website hosting** was enabled.
+3.  The **Index document** was specified as `index.html`.
+    ![Enabled static hosting](public/assets/enabled_static_hosting.png)
 
-![Access denied](public/assets/access_denied.png)
+---
 
-Note: Aws follows the if not implicit allow, defaults to explicit deny. So allowing public access while creating the bucket does not cut it. We have to implicitly allow it in the bucket policy
+### 3. Access Control and Troubleshooting
 
-## Creating a bucket policy to grant public read access
+#### 3.1 Initial Access Attempt and Denial
 
-- Under Bukets, choose the name of the bucket, **cafe-s3-demo-bucket** in my case.
-- Choose **Permissions** 
-- Under **Bucket Policy** choose **Edit**
-- To grant public read access for the website, copy the following bucket policy, and paste it in the Bucket policy editor.
+1.  The endpoint link for the static website was opened in a separate browser tab.
+2.  The initial access attempt resulted in an **Access Denied** error.
+    ![Access denied](public/assets/access_denied.png)
+3.  **Rationale:** AWS security follows the principle of "If not implicitly allowed, default to explicit deny." Although public access was unblocked during creation, an explicit **Bucket Policy** was still required to grant public read permission.
+
+#### 3.2 Creating a Bucket Policy for Public Read Access
+
+1.  The **Permissions** tab for the bucket (`cafe-s3-demo-bucket`) was accessed.
+2.  Under the **Bucket Policy** section, the following JSON policy was added to grant public `s3:GetObject` permission:
 
 ```json
 {
@@ -42,7 +47,7 @@ Note: Aws follows the if not implicit allow, defaults to explicit deny. So allow
             "Effect": "Allow",
             "Principal": "*",
             "Action": [
-                "s3": "GetObject"
+                "s3:GetObject"
             ],
             "Resource": [
                 "arn:aws:s3:::cafe-s3-demo-bucket/*"
@@ -52,9 +57,3 @@ Note: Aws follows the if not implicit allow, defaults to explicit deny. So allow
 }
 ```
 ![Bucket policy added](public/assets/bucket_policy_added.png)
-
-- In the **cafe-s3-demo-bucket** under **Objects**
-- Select the index.hmtl file and click the **Copy url** button.
-- In a separate web browser tab, opened the endpoint link for the static website., the website should be accessible now
-
-![Website loaded successfully!](public/assets/website_loaded.png)
